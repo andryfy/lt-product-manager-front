@@ -1,13 +1,32 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { AfterViewInit, Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { PreloaderService } from './services/common/preloader.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterOutlet,
+    NzIconModule,
+    NzLayoutModule,
+    NzMenuModule,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.less'
+  template: `<router-outlet />`,
+  styleUrls: ['./app.component.less'],
 })
-export class AppComponent {
-  title = 'lt-product-management-front';
+export class AppComponent implements AfterViewInit {
+  private readonly preloader: PreloaderService = inject(PreloaderService);
+
+  isCollapsed = false;
+
+  ngAfterViewInit(): void {
+    this.preloader.removePreLoader();
+  }
 }
