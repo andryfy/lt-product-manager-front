@@ -6,17 +6,10 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import {
-  Observable,
-  catchError,
-  map,
-  retry,
-  take,
-  throwError,
-} from 'rxjs';
+import { Observable, catchError, map, retry, take, throwError } from 'rxjs';
 
-import { environment } from '@env/environment';
 import { NzSafeAny } from 'ng-zorro-antd/core/types';
+import { environment } from '@env/environment.development';
 
 export interface HeaderOptions {
   headers?:
@@ -44,7 +37,7 @@ export interface HeaderOptions {
   providedIn: 'root',
 })
 export class HttpService {
-  private http: HttpClient = inject(HttpClient);
+  private readonly http: HttpClient = inject(HttpClient);
 
   private readonly APIUrl: string;
   private httpOptions!: HeaderOptions | any;
@@ -109,8 +102,27 @@ export class HttpService {
     return otherUrl ? path : this.APIUrl + path;
   }
 
+  private handleHttpResponse<T>(): (
+    observable: Observable<T>
+  ) => Observable<T> {
+    return (observable: Observable<T>) =>
+      observable.pipe(
+        take(1),
+        retry(3),
+        map((response: any) => {
+          return response;
+        }),
+        catchError((error) => {
+          return this.handleHttpError(error);
+        })
+      );
+  }
+
   // Handle API errors
   private handleHttpError(error: HttpErrorResponse): Observable<NzSafeAny> {
+    // this.message.warning('Indentifiant ou mot de passe incorrect');
+    console.error('HttpError: ', error);
+
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       // console.error('An error occurred:', error.error.message);
@@ -127,21 +139,5 @@ export class HttpService {
           statusText: error.message,
         })
     );
-  }
-
-  private handleHttpResponse<T>(): (
-    observable: Observable<T>
-  ) => Observable<T> {
-    return (observable: Observable<T>) =>
-      observable.pipe(
-        take(1),
-        retry(3),
-        map((response: any) => {
-          return response;
-        }),
-        catchError((error) => {
-          return this.handleHttpError(error);
-        })
-      );
   }
 }

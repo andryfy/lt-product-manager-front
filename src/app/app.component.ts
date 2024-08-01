@@ -17,14 +17,10 @@ import { PreloaderService } from './services/common/preloader.service';
     NzLayoutModule,
     NzMenuModule,
   ],
-  templateUrl: './app.component.html',
   template: `<router-outlet />`,
-  styleUrls: ['./app.component.less'],
 })
 export class AppComponent implements AfterViewInit {
   private readonly preloader: PreloaderService = inject(PreloaderService);
-
-  isCollapsed = false;
 
   ngAfterViewInit(): void {
     this.preloader.removePreLoader();

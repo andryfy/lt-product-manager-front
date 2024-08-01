@@ -4,7 +4,7 @@ import {
   importProvidersFrom,
   enableProdMode,
 } from '@angular/core';
-import { provideRouter, RouteReuseStrategy } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { icons } from './icons-provider';
@@ -19,8 +19,9 @@ import {
 import fr from '@angular/common/locales/fr';
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient } from '@angular/common/http';
-import { environment } from '../environments/environment';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { environment } from '@env/environment.development';
+import interceptors from './services/interceptors';
 
 registerLocaleData(fr);
 
@@ -45,6 +46,8 @@ export const appConfig: ApplicationConfig = {
     provideNzIcons(icons),
     provideNzI18n(fr_FR),
     importProvidersFrom(FormsModule),
+    ...interceptors,
+    provideHttpClient(withInterceptorsFromDi()),
     provideAnimationsAsync(),
     provideHttpClient(),
     { provide: LocationStrategy, useClass: PathLocationStrategy },

@@ -1,0 +1,9 @@
+<nz-result nzStatus="404" nzSubTitle="Sorry, the page you visited does not exist." nzTitle="Page not found">
+  <div nz-result-extra>
+    Do you want to go back to the
+    <a href="javascript:void(0)" nz-button nzType="primary" routerLinkActive="router-link-active" (click)="previous()">previous page</a>
+    or the
+    <a [routerLink]="['/']">Home page</a>
+    ?
+  </div>
+</nz-result>

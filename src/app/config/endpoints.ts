@@ -7,5 +7,6 @@ export const ENDPOINTS_APP = {
 export const ENDPOINTS_API = {
   login: '/auth/login',
   register: '/auth/register',
+  user: '/user',
   product: '/product',
 };

@@ -26,7 +26,6 @@
       "@env/*": ["src/environments/*"],
       "@utils/*": ["src/app/utils/*"],
       "@config/*": ["src/app/config/*"],
-      "@assets/*": ["src/assets/*"],
       "@services/*": ["src/services/*"]
     }
   },

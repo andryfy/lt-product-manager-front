@@ -1,1 +1,42 @@
-<p>register works!</p>
+<nz-card class="form-wrapper translate-middle position-absolute top-50 start-50" [nzTitle]="cardTitleTemplate">
+  <ng-template #cardTitleTemplate>
+    <h3 class="text-center">Créer un compte</h3>
+  </ng-template>
+
+  <form nz-form nzLayout="vertical" [formGroup]="registerForm" class="register-form" (ngSubmit)="register()">
+    <nz-form-item>
+      <nz-form-label>Identifiant</nz-form-label>
+      <nz-form-control nzErrorTip="Please input your username">
+        <nz-input-group nzPrefixIcon="user">
+          <input type="text" autocomplete="off" nz-input formControlName="username" placeholder="Username" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Mot de passe</nz-form-label>
+      <nz-form-control nzErrorTip="Please input your password">
+        <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
+          <input [type]="passwordVisible ? 'text' : 'password'" autocomplete="new-password" nz-input formControlName="password"
+            placeholder="Password" />
+        </nz-input-group>
+        <ng-template #suffixTemplate>
+          <span class="pointer" nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+            (click)="passwordVisible = !passwordVisible"></span>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Confirmation</nz-form-label>
+      <nz-form-control nzErrorTip="Please confirm your password">
+        <nz-input-group nzPrefixIcon="lock">
+          <input type="password" nz-input formControlName="passwordConfirm" placeholder="Password" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <button nz-button class="w-100" nzType="primary">Créer mon compte</button>
+    </nz-form-item>
+    Vous avez déjà un compte ?
+    <a [routerLink]="['/auth/login']">Connexion</a>
+  </form>
+</nz-card>
