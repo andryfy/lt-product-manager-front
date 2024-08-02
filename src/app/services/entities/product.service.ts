@@ -50,4 +50,18 @@ export class ProductService {
       tap(() => this.handleChange(true))
     ) as Observable<boolean>;
   }
+
+  update(product: Product): Observable<boolean> {
+    return this.httpService.put(`${ENDPOINTS_API.product}/${product.id}`, product).pipe(
+      switchMap((response: any) => of(response.data)),
+      tap(() => this.handleChange(true))
+    ) as Observable<boolean>;
+  }
+
+  delete(product: Product): Observable<boolean> {
+    return this.httpService.delete(`${ENDPOINTS_API.product}/${product.id}`).pipe(
+      switchMap((response: any) => of(response.data)),
+      tap(() => this.handleChange(true))
+    ) as Observable<boolean>;
+  }
 }

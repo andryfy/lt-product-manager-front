@@ -12,6 +12,7 @@ import { ProductService } from '@app/services/entities/product.service';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-product-form',
@@ -47,7 +48,16 @@ export class ProductFormComponent {
   save(): void {
     if (this.productForm.valid) {
       const product: Product = this.productForm.value as Product;
-      this.productService.add(product).subscribe({
+      let source$!: Observable<boolean>;
+
+      if (this.action === 'add') {
+        source$ = this.productService.add(product);
+      } else {
+        product.id = this.product.id;
+        source$ = this.productService.update(product);
+      }
+
+      source$.subscribe({
         next: (response: boolean) => {
           this.message.success('Produit enregisté');
         },

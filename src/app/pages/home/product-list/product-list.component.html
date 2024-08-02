@@ -38,7 +38,7 @@
 </ng-template>
 
 <nz-modal [nzTitle]="action === 'add' ? 'Ajouter un produit' : 'Modifier le produit'"
-  [(nzVisible)]="isVisibleProductFormModal" nzCentered (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  [(nzVisible)]="isVisibleProductFormModal" nzCentered (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzMaskClosable]="false">
   <ng-container *nzModalContent>
     <app-product-form #productFormComponent [action]="action" [product]="productSelected" />
   </ng-container>

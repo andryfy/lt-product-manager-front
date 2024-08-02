@@ -7,6 +7,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -34,6 +35,7 @@ export class ProductListComponent {
   private readonly productService: ProductService = inject(ProductService);
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private readonly modal: NzModalService = inject(NzModalService);
+  private readonly message: NzMessageService = inject(NzMessageService);
 
   private subscription!: Subscription;
 
@@ -109,12 +111,26 @@ export class ProductListComponent {
       nzContent: 'Etes-vous sûr de supprimer ce produit?',
       nzCentered: true,
       nzOkDanger: true,
-      nzOnOk: () => console.log('OK'),
-      nzOnCancel: () => console.log('Cancel'),
+      nzOnOk: () => this.deleteProduct(this.productSelected),
     });
   }
 
   ngOnDestroy(): void {
     if (!!this.subscription) this.subscription.unsubscribe();
+  }
+
+  async deleteProduct(product: Product): Promise<any> {
+    return await new Promise((resolve, reject) => {
+      this.productService.delete(product).subscribe({
+        next: (response: boolean) => {
+          this.cdr.detectChanges();
+          return resolve(true);
+        },
+        error: (e) => {
+          this.message.error('Une erreur est survenue.');
+          return reject(e);
+        },
+      });
+    });
   }
 }
