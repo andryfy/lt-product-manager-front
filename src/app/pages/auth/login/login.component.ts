@@ -72,6 +72,9 @@ export class LoginComponent {
         },
         error: (error: any) => {
           console.error('Error: ', error);
+          if (error.status === 401) {
+            this.message.warning('Indentifiant ou mot de passe incorrect');
+          }
           this.loading = false;
           this.cdr.detectChanges();
         },

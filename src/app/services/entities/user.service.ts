@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { User } from '@app/config/interfaces';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, Observable, share, tap } from 'rxjs';
+import { BehaviorSubject, Observable, share, switchMap, tap } from 'rxjs';
 import { TokenService } from '../common/token.service';
 import { HttpService } from '../common/http.service';
 import { ENDPOINTS_API } from '@app/config/endpoints';
@@ -18,16 +18,16 @@ export class UserService {
     return this.user$.pipe(share());
   }
 
-  setUser(user: User): Observable<User> {
+  setUser(): Observable<any> {
     const token: string = this.tokenService.token ?? '';
-    this.user$.next(user);
+
     const jwtHelper: JwtHelperService = new JwtHelperService();
-    const { id } = jwtHelper.decodeToken(token);
+    console.log('DecodeToken: ', jwtHelper.decodeToken(token));
 
-    return this.getOne(id).pipe(tap((user) => this.user$.next(user)));
-  }
+    const { sub } = jwtHelper.decodeToken(token);
 
-  getOne(id: number): Observable<any> {
-    return this.httpService.get(`${ENDPOINTS_API.user}/${id}`);
+    return this.httpService
+      .get(`${ENDPOINTS_API.user}/${sub}`)
+      .pipe(tap((response: any) => this.user$.next(response.data)));
   }
 }

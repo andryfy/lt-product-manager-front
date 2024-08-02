@@ -1,0 +1,28 @@
+<div class="sidebar-logo w-100 px-4 d-flex justify-content-between">
+  <a>
+    <img src="https://ng.ant.design/assets/img/logo.svg" alt="Angular Logo">
+    <h1>Product Manager</h1>
+  </a>
+
+  <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+    <nz-avatar nzIcon="user"></nz-avatar>
+    <span class="text-white">
+      {{ user.username }}
+    </span>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item class="d-block">
+        <div class="text-center">
+          <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+          <p class="mx-3">Bonjour, <span class="ms-1">{{ user.username }}</span></p>
+        </div>
+      </li>
+      <li nz-menu-divider></li>
+      <li nz-menu-item>
+        <span class="me-2" nz-icon nzType="logout" nzTheme="outline"></span>
+        Se déconnecter
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+</div>

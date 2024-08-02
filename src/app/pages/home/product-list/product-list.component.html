@@ -10,9 +10,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of dataTable.data" (click)="onSelectProduct(data)">
-        <td>{{data.title}}</td>
-        <td>{{data.description}}</td>
-        <td>{{data.price}}</td>
+        <td>{{ data.title }}</td>
+        <td>{{ data.description }}</td>
+        <td>{{ data.price | currency }}</td>
         <td>
           <nz-space [nzSplit]="spaceSplit" nzSize="small">
             <ng-template #spaceSplit>

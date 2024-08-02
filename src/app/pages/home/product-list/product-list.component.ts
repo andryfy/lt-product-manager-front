@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { CurrencyPipe, NgFor } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';
 import { Product } from '@app/config/interfaces';
 import { ProductFormComponent } from '@app/modals/product-form/product-form.component';
@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [
     NgFor,
+    CurrencyPipe,
     NzCardModule,
     NzTableModule,
     NzButtonModule,
@@ -49,7 +50,7 @@ export class ProductListComponent {
   ngOnInit(): void {
     this.getProductList();
 
-    this.productService.change$.subscribe({
+    this.subscription = this.productService.change$.subscribe({
       next: (change: boolean) => {
         if (change) {
           this.getProductList();
@@ -114,6 +115,6 @@ export class ProductListComponent {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (!!this.subscription) this.subscription.unsubscribe();
   }
 }

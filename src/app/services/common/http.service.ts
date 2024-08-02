@@ -8,8 +8,9 @@ import {
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, retry, take, throwError } from 'rxjs';
 
-import { NzSafeAny } from 'ng-zorro-antd/core/types';
 import { environment } from '@env/environment.development';
+import { NzSafeAny } from 'ng-zorro-antd/core/types';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 export interface HeaderOptions {
   headers?:
@@ -38,6 +39,7 @@ export interface HeaderOptions {
 })
 export class HttpService {
   private readonly http: HttpClient = inject(HttpClient);
+  private readonly message: NzMessageService = inject(NzMessageService);
 
   private readonly APIUrl: string;
   private httpOptions!: HeaderOptions | any;
@@ -103,9 +105,9 @@ export class HttpService {
   }
 
   private handleHttpResponse<T>(): (
-    observable: Observable<T>
-  ) => Observable<T> {
-    return (observable: Observable<T>) =>
+    observable: Observable<T | HttpErrorResponse>
+  ) => Observable<T | HttpErrorResponse> {
+    return (observable: Observable<T | HttpErrorResponse>) =>
       observable.pipe(
         take(1),
         retry(3),
@@ -119,24 +121,27 @@ export class HttpService {
   }
 
   // Handle API errors
-  private handleHttpError(error: HttpErrorResponse): Observable<NzSafeAny> {
+  private handleHttpError(
+    error: HttpErrorResponse
+  ): Observable<HttpErrorResponse> {
     // this.message.warning('Indentifiant ou mot de passe incorrect');
-    console.error('HttpError: ', error);
-
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      // console.error('An error occurred:', error.error.message);
-    } else if (error instanceof HttpErrorResponse) {
-      // The backend returned an unsuccessful response code.
-      // console.error(`Backend returned code ${error.status}, body was: ${error.message}`);
+    /* If it's an error due from the client */
+    if (!(error.status >= 400 && error.status < 500)) {
+      this.message.error(
+        "Une erreur s'est produite. Veuillez réessayer plus tard",
+        {
+          nzDuration: 5000,
+          nzAnimate: true,
+        }
+      );
     }
     // return an observable with a user-facing error message
     return throwError(
       () =>
         new HttpErrorResponse({
-          error: error.type,
+          error: error.name,
           status: error.status,
-          statusText: error.message,
+          statusText: error.statusText,
         })
     );
   }

@@ -53,34 +53,15 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   private handleError(
     error: HttpErrorResponse,
     request: HttpRequest<any>
-  ): Observable<never> {
-    const status = error.status;
-    /* If it's not an error due from the client */
-    if (status >= 400 && status < 500) {
-      this.message.warning(
-        !!error.error && !!error.error.error && !!error.error.error.message
-          ? error.error.error.message
-          : error.statusText,
-        {
-          nzDuration: 5000,
-          nzAnimate: true,
-        }
-      );
-    } else {
-      this.message.error('An error occurred. Please try again later', {
-        nzDuration: 5000,
-        nzAnimate: true,
-      });
-    }
-
+  ): Observable<HttpErrorResponse> {
     return throwError(
       () =>
         new HttpErrorResponse({
-          error: error.type,
+          url: error.url!,
+          error: error.error,
           status: error.status,
-          headers: request.headers,
-          url: request.url,
-          statusText: error.message,
+          headers: error.headers,
+          statusText: error.statusText,
         })
     );
   }

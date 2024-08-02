@@ -3,6 +3,7 @@ import {
   provideZoneChangeDetection,
   importProvidersFrom,
   enableProdMode,
+  DEFAULT_CURRENCY_CODE,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -28,8 +29,7 @@ registerLocaleData(fr);
 if (environment.production) {
   enableProdMode();
 
-  // HACK: Don't log to console in production environment.
-  // TODO: This can be done in better way using logger service and logger factory.
+  // Don't log to console in production environment
   if (window) {
     window.console.log =
       window.console.warn =
@@ -45,6 +45,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideNzIcons(icons),
     provideNzI18n(fr_FR),
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'MGA' },
     importProvidersFrom(FormsModule),
     ...interceptors,
     provideHttpClient(withInterceptorsFromDi()),

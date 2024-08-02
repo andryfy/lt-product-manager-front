@@ -8,13 +8,16 @@
   <nz-form-item>
     <nz-form-label>Description</nz-form-label>
     <nz-form-control nzErrorTip="Please input your password">
-      <textarea nz-input placeholder="Description" formControlName="description" [nzAutosize]="{ minRows: 2, maxRows: 3 }"></textarea>
+      <textarea nz-input placeholder="Description" formControlName="description"
+        [nzAutosize]="{ minRows: 2, maxRows: 3 }"></textarea>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
     <nz-form-label>Prix</nz-form-label>
     <nz-form-control nzErrorTip="Please input your password">
-      <input type="number" nz-input formControlName="price" placeholder="Prix" />
+      <nz-input-group nzSuffix="MGA">
+        <input type="number" nz-input formControlName="price" placeholder="Prix" />
+      </nz-input-group>
     </nz-form-control>
   </nz-form-item>
 </form>
