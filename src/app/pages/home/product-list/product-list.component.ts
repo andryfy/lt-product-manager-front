@@ -84,7 +84,7 @@ export class ProductListComponent {
 
   getProductList(filterOption: any = {}): void {
     this.loading = true;
-    this.productService.getMany().subscribe({
+    this.productService.getMany(filterOption).subscribe({
       next: (data: Product[]) => {
         this.productList = data;
         this.loading = false;
@@ -156,6 +156,6 @@ export class ProductListComponent {
   }
 
   search(): void {
-    this.getProductList(this.searchForm.value.keyword);
+    this.getProductList(this.searchForm.value);
   }
 }

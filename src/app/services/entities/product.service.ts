@@ -12,6 +12,8 @@ import {
 import { Product } from '@app/config/interfaces';
 import { ENDPOINTS_API } from '@app/config/endpoints';
 
+import qs from 'qs';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,8 +39,10 @@ export class ProductService {
   }
 
   getMany(filterOptions: any = {}): Observable<Product[]> {
+    const query = qs.stringify(filterOptions);
+
     return this.httpService
-      .get(`${ENDPOINTS_API.product}`)
+      .get(`${ENDPOINTS_API.product}?${query}`)
       .pipe(map((response: any) => response.data ?? [])) as Observable<
       Product[]
     >;
@@ -52,16 +56,20 @@ export class ProductService {
   }
 
   update(product: Product): Observable<boolean> {
-    return this.httpService.put(`${ENDPOINTS_API.product}/${product.id}`, product).pipe(
-      switchMap((response: any) => of(response.data)),
-      tap(() => this.handleChange(true))
-    ) as Observable<boolean>;
+    return this.httpService
+      .put(`${ENDPOINTS_API.product}/${product.id}`, product)
+      .pipe(
+        switchMap((response: any) => of(response.data)),
+        tap(() => this.handleChange(true))
+      ) as Observable<boolean>;
   }
 
   delete(product: Product): Observable<boolean> {
-    return this.httpService.delete(`${ENDPOINTS_API.product}/${product.id}`).pipe(
-      switchMap((response: any) => of(response.data)),
-      tap(() => this.handleChange(true))
-    ) as Observable<boolean>;
+    return this.httpService
+      .delete(`${ENDPOINTS_API.product}/${product.id}`)
+      .pipe(
+        switchMap((response: any) => of(response.data)),
+        tap(() => this.handleChange(true))
+      ) as Observable<boolean>;
   }
 }
