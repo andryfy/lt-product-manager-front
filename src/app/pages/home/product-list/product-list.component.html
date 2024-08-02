@@ -1,5 +1,13 @@
-<nz-card class="w-100" nzTitle="Liste des produits" [nzExtra]="extraTemplate" [nzBodyStyle]="{ padding: '0px' }">
-  <nz-table #dataTable [nzData]="productList" nzHideOnSinglePage [nzLoading]="loading">
+<nz-card class="w-100" nzTitle="Liste des produits" [nzExtra]="extraTemplate"
+  [nzBodyStyle]="{ padding: '0px' }">
+  <nz-table #dataTable [nzTitle]="headerTemplate" [nzData]="productList" nzHideOnSinglePage [nzLoading]="loading">
+    <ng-template #headerTemplate>
+      <form nz-form [formGroup]="searchForm" (ngSubmit)="search()">
+        <nz-input-group nzSuffixIcon="search">
+          <input type="text" nz-input formControlName="keyword" placeholder="Mot clé" />
+        </nz-input-group>
+      </form>
+    </ng-template>
     <thead>
       <tr>
         <th [nzSortFn]="sortByTitle" [nzSortPriority]="false">Titre</th>
@@ -38,7 +46,8 @@
 </ng-template>
 
 <nz-modal [nzTitle]="action === 'add' ? 'Ajouter un produit' : 'Modifier le produit'"
-  [(nzVisible)]="isVisibleProductFormModal" nzCentered (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzMaskClosable]="false">
+  [(nzVisible)]="isVisibleProductFormModal" nzCentered (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+  [nzMaskClosable]="false">
   <ng-container *nzModalContent>
     <app-product-form #productFormComponent [action]="action" [product]="productSelected" />
   </ng-container>

@@ -1,12 +1,22 @@
 import { CurrencyPipe, NgFor } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';
+import {
+  NonNullableFormBuilder,
+  FormGroup,
+  FormControl,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Product } from '@app/config/interfaces';
 import { ProductFormComponent } from '@app/modals/product-form/product-form.component';
 import { ProductService } from '@app/services/entities/product.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
@@ -26,6 +36,10 @@ import { Subscription } from 'rxjs';
     NzDividerModule,
     NzSpaceModule,
     NzModalModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
     ProductFormComponent,
   ],
   templateUrl: './product-list.component.html',
@@ -34,10 +48,17 @@ import { Subscription } from 'rxjs';
 export class ProductListComponent {
   private readonly productService: ProductService = inject(ProductService);
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly fb: NonNullableFormBuilder = inject(NonNullableFormBuilder);
   private readonly modal: NzModalService = inject(NzModalService);
   private readonly message: NzMessageService = inject(NzMessageService);
 
   private subscription!: Subscription;
+
+  searchForm: FormGroup<{
+    keyword: FormControl<string>;
+  }> = this.fb.group({
+    keyword: [''],
+  });
 
   @ViewChild('productFormComponent')
   productFormComponent!: ProductFormComponent;
@@ -61,7 +82,7 @@ export class ProductListComponent {
     });
   }
 
-  getProductList(): void {
+  getProductList(filterOption: any = {}): void {
     this.loading = true;
     this.productService.getMany().subscribe({
       next: (data: Product[]) => {
@@ -132,5 +153,9 @@ export class ProductListComponent {
         },
       });
     });
+  }
+
+  search(): void {
+    this.getProductList(this.searchForm.value.keyword);
   }
 }
